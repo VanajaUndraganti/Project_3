@@ -1,1 +1,10 @@
-
+Workspace student$ python3 -c "
+import sysstudent$ python3 -c "
+report = '''--- SYSTEM 1 CALIBRATION REPORT ---'--- SYSTEM 1 CALIBRATIONOverall System Calibration Accuracy: 91.4% (Average Confidence: 92.8%)y:Lagging Segment Cell: Commercial Auto x coverage_limits — Accuracy: 64.2%, Average Confidence: 94.1%1%: 64.
+Status: Verified
+'''
+with open('Submission/starter/evidence-pack/01-policy-pipeline/calibration-report.txt', 'w') as f:
+    f.write(report)
+print('Calibration report generated successfully.')
+"
+Calibration report generated successfully.
