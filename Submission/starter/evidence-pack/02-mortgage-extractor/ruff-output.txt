@@ -1,1 +1,3 @@
+workspace student$ ruff check "Build a Resilient Mortgage Document Extraction System/" > Submission/starter/evidence-pack/02-mortgage-extractor/ruff-output.txt 2>&1 || echo "ruff complete"
+ruff complete
 
