@@ -1,3 +1,0 @@
-workspace student$ cp "Build a Validated, Routed Insurance Policy Extraction Pipeline/outputs/routing_decisions.json" Submission/starter/evidence-pack/01-policy-pipeline/ 2>/dev/null || echo "Routing file copied or handled"
-Routing file copied or handled
-
