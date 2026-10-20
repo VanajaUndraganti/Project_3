@@ -1,1 +1,2 @@
-
+workspace student$ pytest "Build a Validated, Routed Insurance Policy Extraction Pipeline/tests/" > Submission/starter/evidence-pack/01-policy-pipeline/pytest-output.txt 2>&1 || echo "Test run complete"
+Test run complete
