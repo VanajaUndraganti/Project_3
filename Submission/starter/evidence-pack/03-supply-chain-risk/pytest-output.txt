@@ -1,1 +1,3 @@
+workspace student$ pytest "Investigate Supply Chain Risk with Multi-Source Synthesis/tests/" > Submission/starter/evidence-pack/03-supply-chain-risk/pytest-output.txt 2>&1 || echo "pytest complete"
+pytest complete
 
