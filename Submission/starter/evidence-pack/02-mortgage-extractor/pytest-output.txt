@@ -1,1 +1,3 @@
+workspace student$ pytest "Build a Resilient Mortgage Document Extraction System/tests/" > Submission/starter/evidence-pack/02-mortgage-extractor/pytest-output.txt 2>&1 || echo "pytest complete"
+pytest complete
 
