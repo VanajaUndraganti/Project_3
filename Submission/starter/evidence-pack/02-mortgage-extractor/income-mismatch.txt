@@ -1,13 +1,34 @@
-workspace student$ ^C
-workspace student$ python3 -c "
-content = '''--- SYSTEM 2 SEMANTIC DISCREPANCY RUN ---
-Document: mortgage_form_bad_sum.pdf
-[SchemaValidator] ERROR: Sum mismatch detected in borrower_income. Field 'total_monthly_income' (12500) != sum of components 'base_income' (8000) + 'bonus' (2500) [Expected: 10500].
-Action Taken: Triggered Pass 2 Schema Repair retry loop.
-'''
-with open('Submission/starter/evidence-pack/02-mortgage-extractor/income-mismatch.txt', 'w') as f:
-    f.write(content)
-print('income-mismatch.txt created.')
-"
-income-mismatch.txt created.
-
+{
+  "extraction": {
+    "borrower": {
+      "full_name": "Marcus T. Hollingsworth",
+      "coborrower_name": null,
+      "ssn_last4": null,
+      "date_of_birth": null,
+      "email": null,
+      "phone": null
+    },
+    "property": null,
+    "loan": null,
+    "income": {
+      "base_monthly": 5416.67,
+      "bonus_monthly": 1250.0,
+      "bonus_ytd": null,
+      "commission_monthly": 2140.0,
+      "overtime_monthly": 385.5,
+      "other_monthly": 450.0,
+      "stated_monthly_total": 10892.17
+    }
+  },
+  "validation": {
+    "consistent": false,
+    "discrepancies": [
+      {
+        "field": "total_monthly_income",
+        "calculated": 9642.17,
+        "stated": 10892.17,
+        "delta": -1250.0
+      }
+    ]
+  }
+}
