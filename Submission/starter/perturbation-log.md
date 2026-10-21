@@ -8,41 +8,39 @@ own experiment earns more credit).
 
 ### System 1 — validated, routed pipeline
 
-- **Change I made (file + what I changed):**
-Modified the policy routing threshold configuration (e.g., in supply_chain_risk/coordinator.py or policy rules) to increase the minimum confidence score required for auto-approval from 0.80 to 0.95
-- **Command I ran:**
-PYTHONPATH="." pytest tests/test_coordinator.py -k routing
-- **What I predicted:**
-Pipeline entries with moderate confidence levels (around 0.85) that previously passed automated validation will now violate the stricter policy threshold and be routed to manual review.
-- **What actually happened (paste the key output line):**
-FAILED tests/test_coordinator.py::test_routing_policy_threshold - AssertionError: Expected auto_approval, got human_review_required
-- **How this differs from the unperturbed run:**
-In the unperturbed run, the default threshold (0.80) permitted moderately confident data payloads to pass through the validation pipeline automatically. Tightening the policy boundary enforced stricter routing, causing assertions tied to the standard threshold to fail.
----
+- === SYSTEM 1: POLICY PIPELINE PERTURBATION ===
+Change: Removed the required field 'annual_premium' from input policy document 'data/policies/policy_auto_002.json'.
+Command: python -m policy_pipeline.main --input-dir data/policies --output-dir 01-policy-pipeline/output/
+Prediction: The policy pipeline will detect the missing critical field during schema checks and immediately override normal scoring to route the record to human_review.
+Result:
+  [ESCALATE] policy_auto_002: required field 'annual_premium' missing. Routing decision assigned: human_review.
+Contrast:
+  - Baseline run (unperturbed): policy_auto_002 was fully processed and assigned an auto_approve decision based on standard confidence thresholds.
+  - Perturbed run: The missing required field triggered an immediate escalation rule, forcing the record into human_review rather than trusting model confidence.
+
+  ---
 
 ### System 2 — schema-enforced two-pass extraction
 
-- **Change I made (file + what I changed):**
-Modified supply_chain_risk/news_extraction.py to artificially adjust the Pydantic schema field constraint for defect_rate_ppm with a strict maximum limit (le=50.0).
-- **Command I ran:**
-pytest tests/test_extraction.py
-- **What I predicted:**
-The second-pass validation layer will reject extracted values exceeding 50.0 ppm, triggering a validation failure error during the test suite execution.
-- **What actually happened (paste the key output line):**
-FAILED tests/test_extraction.py::test_extraction_validation - pydantic_core.ValidationError: Input should be less than or equal to 50 [type=less_than_equal, input_value=180.0, input_type=float]
-- **How this differs from the unperturbed run:**
-In the unperturbed run, the schema correctly accepted standard industry defect rates (such as 180.0 ppm) without raising threshold exceptions, allowing all extraction tests to pass cleanly.
+=== SYSTEM 2: MORTGAGE EXTRACTOR PERTURBATION ===
+Change: Altered base monthly income from $8,392.17 to $7,142.17 in 'data/mortgage/income_doc_01.txt' while keeping stated_monthly_total at $10,892.17.
+Command: python -m mortgage_extractor.main --input data/mortgage/income_doc_01.txt --output 02-mortgage-extractor/income-mismatch.txt
+Prediction: Tool use will generate valid JSON, but Pydantic schema validation will report a sum consistency discrepancy.
+Result:
+  "validation": { "consistent": false, "discrepancies": ["total_monthly_income calculated 9642.17 against stated 10892.17, with delta -1250.0"] }
+Contrast:
+  - Baseline run: Income line items summed up correctly to stated total with "consistent": true.
+  - Perturbed run: Tool extraction succeeded as valid JSON, but validator flagged a delta discrepancy of -1250.0.
 ---
 
 ### System 3 — multi-source synthesis
 
-- **Change I made (file + what I changed):**
-Opened data/meridian/logistics.json and changed the on_time_delivery_rate from 78.0 to 95.0, intentionally making it perfectly match the supplier_audit.json report.
-- **Command I ran:**
-PYTHONPATH="." python -m supply_chain_risk meridian --offline
-- **What I predicted:**
-By removing the discrepancy, I predicted the metric would drop its "Escalate" warning and move from the "Contested" section to the "Well-Established" section.
-- **What actually happened (paste the key output line):**
-### on_time_delivery_rate  _[corroborated across 2 sources]_ (Appeared under the ## Well-Established heading).
-- **How this differs from the unperturbed run:**
-The unperturbed run placed this metric under ## Contested with a ⚠️ ESCALATE warning because the logistics source (78%) conflicted with the supplier audit (95%). Harmonizing the inputs successfully resolved the conflict.
+=== SYSTEM 3: MULTI-SOURCE SYNTHESIS PERTURBATION ===
+Change: Updated 'on_time_delivery_rate' in logistics source file 'data/supply_chain/logistics_01.json' from 78.0% to 95.0% to match supplier audit data.
+Command: python -m supply_chain.synthesize --data-dir data/supply_chain --output 03-supply-chain-risk/briefing-perturbed.txt
+Prediction: The metric 'on_time_delivery_rate' will move from ## Contested to ## Well-Established.
+Result:
+  Under '## Well-Established': on_time_delivery_rate: 95.0% (Supported by supplier_audit, logistics)
+Contrast:
+  - Baseline run (briefing-normal.txt): Metric was flagged under '## Contested' due to 95% vs 78% discrepancy between audit and logistics.
+  - Perturbed run (briefing-perturbed.txt): Metric moved to '## Well-Established' as both sources agreed on 95.0%.
