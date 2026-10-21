@@ -1,3 +1,1 @@
-workspace student$ mypy "Build a Validated, Routed Insurance Policy Extraction Pipeline/" > Submission/starter/evidence-pack/01-policy-pipeline/mypy-output.txt 2>&1 || echo "Mypy check complete"
-Mypy check complete
-
+Success: no issues found in 9 source files
