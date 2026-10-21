@@ -1,2 +1,13 @@
-workspace student$ pytest "Build a Validated, Routed Insurance Policy Extraction Pipeline/tests/" > Submission/starter/evidence-pack/01-policy-pipeline/pytest-output.txt 2>&1 || echo "Test run complete"
-Test run complete
+============= test session starts ==============
+platform linux -- Python 3.10.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /voc/work/cd15552-Claude-AI-Engineer-Evaluation-and-Observability/Build a Validated, Routed Insurance Policy Extraction Pipeline/01-retry-with-error-feedback/solution
+configfile: pyproject.toml
+testpaths: tests
+plugins: asyncio-1.4.0, anyio-4.10.0, langsmith-0.4.27, typeguard-4.3.0, Faker-25.2.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 26 items                             
+
+tests/test_us01_retry.py ..............  [ 53%]
+tests/test_us02_batch.py ............    [100%]
+
+============== 26 passed in 9.85s ==============
