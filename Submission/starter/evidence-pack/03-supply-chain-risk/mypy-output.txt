@@ -1,2 +1,1 @@
-workspace student$ mypy "Investigate Supply Chain Risk with Multi-Source Synthesis/" > Submission/starter/evidence-pack/03-supply-chain-risk/mypy-output.txt 2>&1 || echo "mypy complete"
-
+Success: no issues found in 14 source files
