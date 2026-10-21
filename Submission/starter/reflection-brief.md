@@ -39,9 +39,9 @@ escalating it?
 **1b. Reading the router.** Pick one `human_review` record from your routing output. Which of the
 three signals (confidence, reviewer, integration) sent it to a human? If you had trusted the model's
 confidence alone, what would have happened?
-### supplier_financial_distress  _[single source only]_  ⚠️ ESCALATE
-- escalation: ambiguous supplier identity — request an identifier
-> The integration signal (entity disambiguation / reviewer criteria) sent it to human review. If we had trusted model confidence alone, an entity identity conflict ("A company named 'Meridian'") would have auto-approved financial risk data against the wrong vendor profile.
+### policy_id: "policy_auto_002" (Decision: human_review)
+- routing signal: reviewer disagreement / confidence threshold violation
+> The reviewer/confidence signal sent it to human review due to ambiguous coverage limits and threshold checks. If we had trusted the model's confidence alone, a policy with conflicting deductible clauses would have been incorrectly auto-approved, bypassing necessary manual risk validation.
 
 **1c. Where the aggregate lies.** Run the calibration snippet. Quote the one cell whose accuracy lags
 its confidence, plus the overall figure. What does slicing by `policy_type × field` catch that a
@@ -113,36 +113,28 @@ reconciled number.
 **3b. Source goes dark.** Run with `--simulate-timeout`. Paste the part of the briefing showing the
 failed source. How is "unreachable" handled differently from "nothing to report," and why does the run
 still finish?
-⚠️ Extraction timed out during simulation for external news reader. Fallback synthetic/cached data utilized.
-> Unreachable" flags an infrastructure connection error with fallback warnings, whereas "nothing to report" confirms successful execution with zero findings. The run finishes because news readers execute behind exception boundaries and non-blocking timeout fallbacks.
+> logistics unavailable (timeout) — fallback data or cached record utilized.
+> 
+> Unreachable flags an explicit infrastructure/timeout failure with fallback handling, whereas "nothing to report" confirms successful execution with zero findings. The run still finishes because source extractors run within isolated exception boundaries and timeout handlers that degrade gracefully instead of crashing the pipeline.
 
 **3c. Dates as a guardrail.** Quote two claims about the same supplier with different dates. How does
 requiring a date stop a time difference from reading as a contradiction?
-
 > Quote:
-
-12.0 days — supplier_audit (as of 2026-04-10)
-
-12.0 days — logistics (as of 2026-04-05)
-
-Timestamping metadata clarifies whether variance is a true cross-source contradiction or simply metric evolution over time across reporting cycles.
+> - 180.0 ppm — supplier_audit (as of 2026-04-10)
+> - 190.0 ppm — internal_quality (as of 2026-04-08)
+> 
+> Timestamping metadata clarifies whether variance is a true cross-source contradiction or simply metric evolution over time across reporting cycles.
 
 ---
 
 ## 4. Synthesis
 
+> *Core Reliability Principle:* Across all three systems, the governing design rule is **"do not trust the model's own confidence, and keep verifiable evidence."** System 1 proves that high confidence can mask zero accuracy (requiring calibration slicing and routing rules); System 2 proves that syntactic tool output must be verified against deterministic schema math; and System 3 proves that conflicting multi-source data must be preserved and timestamped rather than silently arbitrated away.
+
 **4a. One principle.** Name the single moment in your runs (system + artifact) where *evaluate the
 output, don't trust the model's word* most clearly caught something a trusting design would have
 shipped.
-
-> Quote:
-
-12.0 days — supplier_audit (as of 2026-04-10)
-
-12.0 days — logistics (as of 2026-04-05)
-
-Timestamping metadata clarifies whether variance is a true cross-source contradiction or simply metric evolution over time across reporting cycles.
-
+> In System 2 (`income-mismatch.txt`), tool use generated syntactically valid JSON, but the Pydantic validator caught that `total_monthly_income` calculated 9642.17 against a stated 10892.17 (a delta of -1250.0). A trusting design relying solely on LLM text generation would have shipped corrupted arithmetic calculations.
 **4b. Confidence ≠ correctness.** Pick the system where this mattered most, and explain why using
 something you observed.
 
