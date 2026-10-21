@@ -25,9 +25,9 @@
 
 | Evidence | Value |
 |---|---|
-| Passing test count |12 passed in pytest-output.txt|
-| Routing output file | briefing-normal.txt|
-| auto_approve / human_review / spot_check counts |3 /2 /1 |
+| Passing test count | 48 passed in 01-policy-pipeline/pytest-output.txt |
+| Routing output file | 01-policy-pipeline/routing_decisions.json |
+| auto_approve / human_review / spot_check counts | 3 / 2 / 1 |
 
 **1a. Retry boundary.** From your perturbation run (a required field removed), paste the escalation
 record. How many API calls did the system make, and why is retrying a futile case worse than
@@ -41,7 +41,7 @@ three signals (confidence, reviewer, integration) sent it to a human? If you had
 confidence alone, what would have happened?
 ### supplier_financial_distress  _[single source only]_  ⚠️ ESCALATE
 - escalation: ambiguous supplier identity — request an identifier
->The integration signal (entity disambiguation / reviewer criteria) sent it to human review. If we had trusted model confidence alone, an entity identity conflict ("A company named 'Meridian'") would have auto-approved financial risk data against the wrong vendor profile.
+> The integration signal (entity disambiguation / reviewer criteria) sent it to human review. If we had trusted model confidence alone, an entity identity conflict ("A company named 'Meridian'") would have auto-approved financial risk data against the wrong vendor profile.
 
 **1c. Where the aggregate lies.** Run the calibration snippet. Quote the one cell whose accuracy lags
 its confidence, plus the overall figure. What does slicing by `policy_type × field` catch that a
@@ -57,9 +57,9 @@ Slicing by policy_type × field uncovers localized overconfidence in specific ed
 
 | Evidence | Value |
 |---|---|
-| Passing test count | 4 passed (tests/test_extraction.py)|
-| Document run | data/meridian/news_01.txt|
-| Classified type |industry_news|
+| Passing test count | 5 passed in 02-mortgage-extractor/pytest-output.txt |
+| Document run | data/meridian/news_01.txt |
+| Classified type | industry_news |
 
 **2a. Two guarantees.** Paste your discrepancy-run output. Tool use already forces valid JSON, yet the
 validator still catches a bad sum. Why are these two different guarantees? Name one error each cannot
@@ -87,9 +87,9 @@ Normalizing at extraction time ensures all downstream synthesis modules, compari
 
 | Evidence | Value |
 |---|---|
-| Passing test count |5 passed (tests/test_coordinator.py) |
-| Briefing file | briefing-normal.txt|
-| Section the conflict landed in |## Contested |
+| Passing test count | 34 passed in 03-supply-chain-risk/pytest-output.txt |
+| Briefing file | 03-supply-chain-risk/briefing-normal.txt |
+| Section the conflict landed in | ## Contested |
 
 **3a. Annotate, don't arbitrate.** Quote one conflicting-metric pair from your briefing — both values,
 sources, dates. Give one way a reader is better served by the preserved conflict than by a single
