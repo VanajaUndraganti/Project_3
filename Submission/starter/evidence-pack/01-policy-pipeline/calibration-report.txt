@@ -1,10 +1,25 @@
-Workspace student$ python3 -c "
-import sysstudent$ python3 -c "
-report = '''--- SYSTEM 1 CALIBRATION REPORT ---'--- SYSTEM 1 CALIBRATIONOverall System Calibration Accuracy: 91.4% (Average Confidence: 92.8%)y:Lagging Segment Cell: Commercial Auto x coverage_limits — Accuracy: 64.2%, Average Confidence: 94.1%1%: 64.
-Status: Verified
-'''
-with open('Submission/starter/evidence-pack/01-policy-pipeline/calibration-report.txt', 'w') as f:
-    f.write(report)
-print('Calibration report generated successfully.')
-"
-Calibration report generated successfully.
+auto       coverage_limit     n=3 conf=0.98 acc=0.00 brier=0.967
+auto       deductible         n=3 conf=0.98 acc=0.67 brier=0.301
+auto       endorsements       n=3 conf=0.92 acc=0.33 brier=0.542
+auto       exclusions         n=3 conf=0.97 acc=1.00 brier=0.003
+auto       policy_type        n=3 conf=1.00 acc=1.00 brier=0.000
+auto       premium_amount     n=3 conf=1.00 acc=1.00 brier=0.000
+home       coverage_limit     n=3 conf=1.00 acc=1.00 brier=0.000
+home       deductible         n=3 conf=0.97 acc=1.00 brier=0.002
+home       endorsements       n=3 conf=0.93 acc=0.67 brier=0.272
+home       exclusions         n=3 conf=0.97 acc=1.00 brier=0.003
+home       policy_type        n=3 conf=1.00 acc=0.67 brier=0.333
+home       premium_amount     n=3 conf=1.00 acc=1.00 brier=0.000
+umbrella   coverage_limit     n=2 conf=1.00 acc=1.00 brier=0.000
+umbrella   deductible         n=2 conf=0.95 acc=0.00 brier=0.902
+umbrella   endorsements       n=2 conf=0.95 acc=1.00 brier=0.003
+umbrella   exclusions         n=2 conf=0.97 acc=1.00 brier=0.001
+umbrella   policy_type        n=2 conf=1.00 acc=1.00 brier=0.000
+umbrella   premium_amount     n=2 conf=1.00 acc=1.00 brier=0.000
+other      coverage_limit     n=1 conf=1.00 acc=1.00 brier=0.000
+other      deductible         n=1 conf=1.00 acc=1.00 brier=0.000
+other      endorsements       n=1 conf=0.95 acc=1.00 brier=0.003
+other      exclusions         n=1 conf=1.00 acc=1.00 brier=0.000
+other      policy_type        n=1 conf=1.00 acc=0.00 brier=1.000
+other      premium_amount     n=1 conf=1.00 acc=1.00 brier=0.000
+OVERALL brier=0.187
