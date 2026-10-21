@@ -1,3 +1,14 @@
-workspace student$ pytest "Investigate Supply Chain Risk with Multi-Source Synthesis/tests/" > Submission/starter/evidence-pack/03-supply-chain-risk/pytest-output.txt 2>&1 || echo "pytest complete"
-pytest complete
+============================= test session starts ==============================
+platform linux -- Python 3.11.8, pytest-9.1.1, pluggy-1.7.0
+rootdir: /voc/work/cd15552-Claude-AI-Engineer-Evaluation-and-Observability/Investigate Supply Chain Risk with Multi-Source Synthesis/03-resilient-coordinator/solution
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 34 items
 
+tests/test_coordinator.py ......                                         [ 17%]
+tests/test_memory.py .....                                               [ 32%]
+tests/test_readers.py .............                                      [ 70%]
+tests/test_synthesis.py ..........                                       [100%]
+
+======================== 34 passed in 90.33s (0:01:30) =========================
