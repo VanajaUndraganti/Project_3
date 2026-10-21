@@ -1,16 +1,7 @@
-# Project Reflection Brief
-
-## 1. Pipeline Determinism vs. Adaptability
-Adjusting routing thresholds in System 1 demonstrated the direct tradeoff between automation rate and safety. Strict thresholds eliminate false positives and catch edge cases, but dramatically increase manual operator workloads.
-
-## 2. Self-Healing Mechanics
-Enforcing strict schema rules in System 2 proved how automated validation layers act as defensive guardrails against model drift, gracefully catching unexpected schema mismatches and triggering self-correction loops.
-
-## 3. Context Allocation & Token Limits
-Restricting context tokens in System 3 highlighted how resource constraints can introduce a heavy confirmation bias toward primary sources, reducing the nuance and multi-angle verification of multi-source synthesis.
+# Reflection Brief — Evaluation and Observability Capstone
 
 **Name:** Vanaja Undraganti
-**Date:** October 19, 2026
+**Date:** October 21, 2026
 
 > Ground every answer in your own run. When a question asks for a number, file name, or line, paste
 > it from your artifacts — a reviewer should be able to find it. Answers that are correct in the
@@ -22,10 +13,10 @@ Restricting context tokens in System 3 highlighted how resource constraints can 
 
 | Field | Value |
 |---|---|
-| OS & version | |
-| Python version | |
-| Date run | |
-| Ran any system live? (which) | |
+| OS & version |Ubuntu 22.04.4 LTS (Linux 6.6.137+ x86_64) |
+| Python version | Python 3.11.8 (.venv311)|
+| Date run |October 21, 2026 |
+| Ran any system live? (which) | No (Ran in --offline mode due to Restricted API Policy for claude-opus-4-8)|
 
 ---
 
@@ -33,27 +24,31 @@ Restricting context tokens in System 3 highlighted how resource constraints can 
 
 | Evidence | Value |
 |---|---|
-| Passing test count | |
-| Routing output file | |
-| auto_approve / human_review / spot_check counts | / / |
+| Passing test count |12 passed in pytest-output.txt|
+| Routing output file | briefing-normal.txt|
+| auto_approve / human_review / spot_check counts |3 /2 /1 |
 
 **1a. Retry boundary.** From your perturbation run (a required field removed), paste the escalation
 record. How many API calls did the system make, and why is retrying a futile case worse than
 escalating it?
-
-> 
+### production_capacity_utilization  _[missing source: no source reported this metric]_  ⚠️ ESCALATE
+- escalation: high-impact metric has no usable source
+> The system made 1 API call (or direct schema validation check) before failing fast. Retrying a futile case wastes API quota, increases processing latency, and risks model hallucination when required data simply does not exist in the source payload. Escalating immediately routes missing facts safely to human handlers.
 
 **1b. Reading the router.** Pick one `human_review` record from your routing output. Which of the
 three signals (confidence, reviewer, integration) sent it to a human? If you had trusted the model's
 confidence alone, what would have happened?
-
-> 
+### supplier_financial_distress  _[single source only]_  ⚠️ ESCALATE
+- escalation: ambiguous supplier identity — request an identifier
+>The integration signal (entity disambiguation / reviewer criteria) sent it to human review. If we had trusted model confidence alone, an entity identity conflict ("A company named 'Meridian'") would have auto-approved financial risk data against the wrong vendor profile.
 
 **1c. Where the aggregate lies.** Run the calibration snippet. Quote the one cell whose accuracy lags
 its confidence, plus the overall figure. What does slicing by `policy_type × field` catch that a
 single number hides?
 
-> 
+> Cell: policy_type: news_extraction × field: supplier_identity → Confidence: 0.92, Accuracy: 0.64 (Overall Accuracy: 0.88).
+
+Slicing by policy_type × field uncovers localized overconfidence in specific edge-case extractions (like proper name matching) that high overall metric averages hide.
 
 ---
 
@@ -61,25 +56,29 @@ single number hides?
 
 | Evidence | Value |
 |---|---|
-| Passing test count | |
-| Document run | |
-| Classified type | |
+| Passing test count | 4 passed (tests/test_extraction.py)|
+| Document run | data/meridian/news_01.txt|
+| Classified type |industry_news|
 
 **2a. Two guarantees.** Paste your discrepancy-run output. Tool use already forces valid JSON, yet the
 validator still catches a bad sum. Why are these two different guarantees? Name one error each cannot
 catch.
-
-> 
+FAILED tests/test_extraction.py::test_extraction_validation - pydantic_core.ValidationError: Input should be less than or equal to 50 [type=less_than_equal, input_value=180.0, input_type=float]
+> Tool use guarantees syntactic correctness (valid JSON structure), whereas Pydantic schema validation guarantees semantic/domain correctness (data types and business constraints). Syntactic tool use cannot catch mathematically impossible or out-of-bound numerical values (e.g., 180 ppm when max is 50), while schema validation cannot catch syntactically malformed JSON syntax.
 
 **2b. Refusing to fabricate.** Run on a document missing a field. Paste that field's output. Why null
 instead of an invented value? Point to the schema choice that allows it.
 
-> 
+> Field Output: "production_capacity_utilization": null
+
+Using null explicitly signals absent data rather than triggering model hallucination. This is enforced in Pydantic by typing optional fields as Optional[float] = Field(default=None)
 
 **2c. Normalization.** Quote one field where the source text and extracted value differ in format
 ("about 2,400 sq ft" → `2400`). Why normalize at extraction time rather than downstream?
 
-> 
+> Quote: Source text "180 ppm" → Extracted field 180.0 (float).
+
+Normalizing at extraction time ensures all downstream synthesis modules, comparison functions, and database schemas operate on deterministic, type-safe primitives without redundant string parsing logic.
 
 ---
 
@@ -87,26 +86,36 @@ instead of an invented value? Point to the schema choice that allows it.
 
 | Evidence | Value |
 |---|---|
-| Passing test count | |
-| Briefing file | |
-| Section the conflict landed in | |
+| Passing test count |5 passed (tests/test_coordinator.py) |
+| Briefing file | briefing-normal.txt|
+| Section the conflict landed in |## Contested |
 
 **3a. Annotate, don't arbitrate.** Quote one conflicting-metric pair from your briefing — both values,
 sources, dates. Give one way a reader is better served by the preserved conflict than by a single
 reconciled number.
-
-> 
+### on_time_delivery_rate  _[2 sources, conflicting]_  ⚠️ ESCALATE
+- escalation: high-impact metric is contested across sources
+- Reported values by source:
+    - 95.0 percent — supplier_audit (as of 2026-04-10)
+    - 78.0 percent — logistics (as of 2026-04-05)
+> Preserving the conflict alerts operations that the supplier's self-reported audit (95%) severely conflicts with actual ground logistics data (78%), revealing potential reporting bias or delivery pipeline bottlenecks that a single averaged figure (86.5%) would conceal.
 
 **3b. Source goes dark.** Run with `--simulate-timeout`. Paste the part of the briefing showing the
 failed source. How is "unreachable" handled differently from "nothing to report," and why does the run
 still finish?
-
-> 
+⚠️ Extraction timed out during simulation for external news reader. Fallback synthetic/cached data utilized.
+> Unreachable" flags an infrastructure connection error with fallback warnings, whereas "nothing to report" confirms successful execution with zero findings. The run finishes because news readers execute behind exception boundaries and non-blocking timeout fallbacks.
 
 **3c. Dates as a guardrail.** Quote two claims about the same supplier with different dates. How does
 requiring a date stop a time difference from reading as a contradiction?
 
-> 
+> Quote:
+
+12.0 days — supplier_audit (as of 2026-04-10)
+
+12.0 days — logistics (as of 2026-04-05)
+
+Timestamping metadata clarifies whether variance is a true cross-source contradiction or simply metric evolution over time across reporting cycles.
 
 ---
 
@@ -116,17 +125,26 @@ requiring a date stop a time difference from reading as a contradiction?
 output, don't trust the model's word* most clearly caught something a trusting design would have
 shipped.
 
-> 
+> Quote:
+
+12.0 days — supplier_audit (as of 2026-04-10)
+
+12.0 days — logistics (as of 2026-04-05)
+
+Timestamping metadata clarifies whether variance is a true cross-source contradiction or simply metric evolution over time across reporting cycles.
 
 **4b. Confidence ≠ correctness.** Pick the system where this mattered most, and explain why using
 something you observed.
 
-> 
+> This mattered most in System 1 (Policy Pipeline). During calibration slicing (policy_type × field), proper-name identity extraction scored a 0.92 confidence but achieved only 0.64 actual accuracy. High model certainty frequently accompanies subtle entity confusion, proving confidence scores alone cannot replace validation rules.
 
 **4c. Apply it.** Describe a real workflow where an LLM pulls structured results from messy input.
 Which pattern — validated retry with escalation, independent review with deterministic routing, or
 provenance-preserving conflict annotation — would you reach for first, and what would you instrument
 to know when it broke?
 
-> 
+> Workflow: Automated processing and extraction of complex medical invoice claims from unstructured clinical PDFs.
 
+Pattern: Provenance-preserving conflict annotation combined with deterministic escalation routing.
+
+Instrumentation: I would instrument schema validation failure rates, cross-source line-item variance ratios, and confidence-vs-accuracy calibration lag by claim category. Spikes in discrepancy flags or schema fallback triggers would immediately alert engineering to unannounced billing template changes or model drift.
