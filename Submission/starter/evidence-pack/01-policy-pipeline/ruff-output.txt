@@ -1,3 +1,1 @@
-workspace student$ ruff check "Build a Validated, Routed Insurance Policy Extraction Pipeline/" > Submission/starter/evidence-pack/01-policy-pipeline/ruff-output.txt 2>&1 || echo "Ruff check complete"
-Ruff check complete
-
+All checks passed!
