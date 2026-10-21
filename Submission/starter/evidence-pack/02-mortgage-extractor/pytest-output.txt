@@ -1,3 +1,17 @@
-workspace student$ pytest "Build a Resilient Mortgage Document Extraction System/tests/" > Submission/starter/evidence-pack/02-mortgage-extractor/pytest-output.txt 2>&1 || echo "pytest complete"
-pytest complete
+============================= test session starts ==============================
+platform linux -- Python 3.10.14, pytest-9.1.1, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /voc/work/cd15552-Claude-AI-Engineer-Evaluation-and-Observability/Build a Resilient Mortgage Document Extraction System/01-design-resilient-extraction-schema/solution
+configfile: pyproject.toml
+testpaths: tests
+plugins: asyncio-1.4.0, anyio-4.10.0, langsmith-0.4.27, typeguard-4.3.0, Faker-25.2.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 5 items
 
+tests/test_us01_schema.py::test_ac_01_01_tool_definition_shape PASSED    [ 20%]
+tests/test_us01_schema.py::test_ac_01_02_required_and_optional_fields PASSED [ 40%]
+tests/test_us01_schema.py::test_ac_01_03_enum_other_with_detail_field PASSED [ 60%]
+tests/test_us01_schema.py::test_ac_01_04_at_least_three_nullable_fields PASSED [ 80%]
+tests/test_us01_schema.py::test_ac_01_05_list_nullable_fields_returns_dotted_paths PASSED [100%]
+
+============================== 5 passed in 0.35s ===============================
