@@ -1,2 +1,1 @@
-workspace student$ ruff check "Investigate Supply Chain Risk with Multi-Source Synthesis/" > Submission/starter/evidence-pack/03-supply-chain-risk/ruff-output.txt 2>&1 || echo "ruff complete"
-
+All checks passed!
