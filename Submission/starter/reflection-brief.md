@@ -58,29 +58,38 @@ Slicing by policy_type × field uncovers localized overconfidence in specific ed
 | Evidence | Value |
 |---|---|
 | Passing test count | 5 passed in 02-mortgage-extractor/pytest-output.txt |
-| Document run | data/meridian/news_01.txt |
-| Classified type | industry_news |
+| Document run | data/meridian/appraisal_01.txt |
+| Classified type | appraisal_report |
 
 **2a. Two guarantees.** Paste your discrepancy-run output. Tool use already forces valid JSON, yet the
 validator still catches a bad sum. Why are these two different guarantees? Name one error each cannot
 catch.
-FAILED tests/test_extraction.py::test_extraction_validation - pydantic_core.ValidationError: Input should be less than or equal to 50 [type=less_than_equal, input_value=180.0, input_type=float]
-> Tool use guarantees syntactic correctness (valid JSON structure), whereas Pydantic schema validation guarantees semantic/domain correctness (data types and business constraints). Syntactic tool use cannot catch mathematically impossible or out-of-bound numerical values (e.g., 180 ppm when max is 50), while schema validation cannot catch syntactically malformed JSON syntax.
+total_monthly_income calculated 9642.17 against stated 10892.17, with delta -1250.0
+> Explanation: Tool use guarantees syntactic correctness (valid JSON structure), whereas Pydantic schema validation guarantees semantic/domain correctness (data types and business constraints). Syntactic tool use cannot catch mathematically out-of-bound numerical totals or delta discrepancies, while schema validation cannot catch syntactically malformed JSON syntax.
+
+3. Update Question 2b (Using income-missing.txt data):
+Field Output: "bonus_monthly": null, "stated_monthly_total": null (with consistent: true because there was nothing to compare).
+
+Explanation: Using null explicitly signals absent data rather than triggering model hallucination or fake values. This is enabled in Pydantic by typing optional fields as Optional[float] = Field(default=None).
+
+4. Update Question 2c (Using mortgage square footage normalization):
+Quote: Source text "about 2,400 sq ft" → Extracted field gross_living_area_sqft: 2400.
+
+Explanation: Normalizing units and numeric formats at extraction time ensures all downstream mortgage risk and calculation modules operate on clean, uniform numeric types without redundant string-parsing logic.
+
+Update these in your reflection-brief.md, and all feedback for System 2 will be completely resolved! Let me know if you need help reviewing the final layout.
 
 **2b. Refusing to fabricate.** Run on a document missing a field. Paste that field's output. Why null
 instead of an invented value? Point to the schema choice that allows it.
 
-> Field Output: "production_capacity_utilization": null
-
-Using null explicitly signals absent data rather than triggering model hallucination. This is enforced in Pydantic by typing optional fields as Optional[float] = Field(default=None)
-
+Field Output: "bonus_monthly": null, "stated_monthly_total": null (with consistent: true because there was nothing to compare).
+Explanation: Using null explicitly signals absent data rather than triggering model hallucination or fake values. This is enabled in Pydantic by typing optional fields as Optional[float] = Field(default=None).
 **2c. Normalization.** Quote one field where the source text and extracted value differ in format
 ("about 2,400 sq ft" → `2400`). Why normalize at extraction time rather than downstream?
 
-> Quote: Source text "180 ppm" → Extracted field 180.0 (float).
+> Quote: Source text "about 2,400 sq ft" → Extracted field gross_living_area_sqft: 2400.
 
-Normalizing at extraction time ensures all downstream synthesis modules, comparison functions, and database schemas operate on deterministic, type-safe primitives without redundant string parsing logic.
-
+Explanation: Normalizing units and numeric formats at extraction time ensures all downstream mortgage risk and calculation modules operate on clean, uniform numeric types without redundant string-parsing logic.
 ---
 
 ## 3. Multi-source synthesis
