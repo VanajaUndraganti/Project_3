@@ -13,10 +13,11 @@
 
 | Field | Value |
 |---|---|
-| OS & version |Ubuntu 22.04.4 LTS (Linux 6.6.137+ x86_64) |
-| Python version | Python 3.11.8 (.venv311)|
-| Date run |October 21, 2026 |
-| Ran any system live? (which) | No (Ran in --offline mode due to Restricted API Policy for claude-opus-4-8)|
+| OS & version | Ubuntu 22.04.4 LTS (Linux 6.6.137+ x86_64) |
+| Python version (Systems 1 & 2) | Python 3.10.14 |
+| Python version (System 3) | Python 3.11.8 |
+| Date run | October 21, 2026 |
+| Ran any system live? (which) | No (Ran in --offline mode due to Restricted API Policy) |
 
 ---
 
