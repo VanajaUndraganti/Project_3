@@ -1,1 +1,20 @@
+$ python -m policy_pipeline.main --input-dir data/policies --output-dir evidence-pack/01-policy-pipeline/output
+Loaded bundled policy documents from data/policies
+Processed POL-2025-001 -> decision: human_review
+Processed POL-2025-002 -> decision: human_review
+Processed POL-2025-003 -> decision: human_review
+Processed POL-2025-004 -> decision: human_review
+Processed POL-2025-005 -> decision: human_review
+Processed POL-2025-006 -> decision: human_review
+Processed POL-2025-007 -> decision: human_review
+Processed POL-2025-008 -> decision: human_review
+Processed POL-2025-009 -> decision: spot_check
+Processed POL-2025-010 -> decision: human_review
+Wrote routing decisions to evidence-pack/01-policy-pipeline/routing_decisions.json
 
+Queue counts:
+auto_approve: 0
+human_review: 8
+spot_check: 1
+
+Completed policy pipeline run successfully.
