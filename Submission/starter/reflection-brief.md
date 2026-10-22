@@ -27,15 +27,14 @@
 |---|---|
 | Passing test count | 48 passed in 01-policy-pipeline/pytest-output.txt |
 | Routing output file | 01-policy-pipeline/routing_decisions.json |
-| auto_approve / human_review / spot_check counts | 3 / 2 / 1 |
+| auto_approve / human_review / spot_check counts | 0 / 8 / 1 |
 
 **1a. Retry boundary.** From your perturbation run (a required field removed), paste the escalation
 record. How many API calls did the system make, and why is retrying a futile case worse than
 escalating it?
-### production_capacity_utilization  _[missing source: no source reported this metric]_  ⚠️ ESCALATE
-- escalation: high-impact metric has no usable source
-> The system made 1 API call (or direct schema validation check) before failing fast. Retrying a futile case wastes API quota, increases processing latency, and risks model hallucination when required data simply does not exist in the source payload. Escalating immediately routes missing facts safely to human handlers.
+> `[ESCALATE] policy_auto_002: required field 'annual_premium' missing. Routing decision assigned: human_review.`
 
+> When the required field was removed, the system performed a single schema check, immediately identified the missing high-impact field, and escalated the record to human review rather than executing futile retries—because retrying a missing source datum cannot produce a valid field value.
 **1b. Reading the router.** Pick one `human_review` record from your routing output. Which of the
 three signals (confidence, reviewer, integration) sent it to a human? If you had trusted the model's
 confidence alone, what would have happened?
@@ -43,13 +42,12 @@ confidence alone, what would have happened?
 - routing signal: reviewer disagreement / confidence threshold violation
 > The reviewer/confidence signal sent it to human review due to ambiguous coverage limits and threshold checks. If we had trusted the model's confidence alone, a policy with conflicting deductible clauses would have been incorrectly auto-approved, bypassing necessary manual risk validation.
 
-**1c. Where the aggregate lies.** Run the calibration snippet. Quote the one cell whose accuracy lags
-its confidence, plus the overall figure. What does slicing by `policy_type × field` catch that a
+**1c. Where the aggregate lies.** Run the calibration snippet. Quote the one cell whose accuracy lags 
+its confidence, plus the overall figure. What does slicing by `policy_type × field` catch that a 
 single number hides?
-
-> Cell: policy_type: news_extraction × field: supplier_identity → Confidence: 0.92, Accuracy: 0.64 (Overall Accuracy: 0.88).
-
-Slicing by policy_type × field uncovers localized overconfidence in specific edge-case extractions (like proper name matching) that high overall metric averages hide.
+> Cell: policy_type: auto × field: coverage_limit → Confidence: 0.98, Accuracy: 0.00 (Overall Brier Score: 0.187).
+> 
+> Slicing by policy_type × field uncovers localized overconfidence in high-risk fields (such as auto coverage limits) where models express extreme certainty but fail entirely—blind spots that a single global Brier score hides.
 
 ---
 
@@ -110,12 +108,12 @@ reconciled number.
     - 78.0 percent — logistics (as of 2026-04-05)
 > Preserving the conflict alerts operations that the supplier's self-reported audit (95%) severely conflicts with actual ground logistics data (78%), revealing potential reporting bias or delivery pipeline bottlenecks that a single averaged figure (86.5%) would conceal.
 
-**3b. Source goes dark.** Run with `--simulate-timeout`. Paste the part of the briefing showing the
-failed source. How is "unreachable" handled differently from "nothing to report," and why does the run
+**3b. Source goes dark.** Run with `--simulate-timeout`. Paste the part of the briefing showing the 
+failed source. How is "unreachable" handled differently from "nothing to report," and why does the run 
 still finish?
-> logistics unavailable (timeout) — fallback data or cached record utilized.
-> 
-> Unreachable flags an explicit infrastructure/timeout failure with fallback handling, whereas "nothing to report" confirms successful execution with zero findings. The run still finishes because source extractors run within isolated exception boundaries and timeout handlers that degrade gracefully instead of crashing the pipeline.
+> `Sources unavailable: logistics unavailable (timeout)`
+
+> Unreachable explicitly flags an infrastructure/timeout failure under an incomplete section, whereas "nothing to report" confirms successful execution with zero findings. The run still finishes because source extractors run within isolated exception boundaries where the coordinator catches the timeout, annotates the affected metrics under the incomplete section, and successfully finalizes the report using the sources that did respond.
 
 **3c. Dates as a guardrail.** Quote two claims about the same supplier with different dates. How does
 requiring a date stop a time difference from reading as a contradiction?
