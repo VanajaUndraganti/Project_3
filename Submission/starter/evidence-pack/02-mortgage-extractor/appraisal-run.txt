@@ -1,4 +1,8 @@
 {
+  "document_classification": {
+    "classified_document_type": "appraisal_report",
+    "confidence": 0.98
+  },
   "extraction": {
     "borrower": {
       "full_name": "Hartwell, J. and Hartwell, M.",
