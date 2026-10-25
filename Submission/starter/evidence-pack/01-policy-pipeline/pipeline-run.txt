@@ -1,20 +1,11 @@
-$ python -m policy_pipeline.main --input-dir data/policies --output-dir evidence-pack/01-policy-pipeline/output
-Loaded bundled policy documents from data/policies
-Processed POL-2025-001 -> decision: human_review
-Processed POL-2025-002 -> decision: human_review
-Processed POL-2025-003 -> decision: human_review
-Processed POL-2025-004 -> decision: human_review
-Processed POL-2025-005 -> decision: human_review
-Processed POL-2025-006 -> decision: human_review
-Processed POL-2025-007 -> decision: human_review
-Processed POL-2025-008 -> decision: human_review
-Processed POL-2025-009 -> decision: spot_check
-Processed POL-2025-010 -> decision: human_review
-Wrote routing decisions to evidence-pack/01-policy-pipeline/routing_decisions.json
+============================= test session starts ==============================
+platform linux -- Python 3.10.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /voc/work/cd15552-Claude-AI-Engineer-Evaluation-and-Observability/Build a Validated, Routed Insurance Policy Extraction Pipeline/01-retry-with-error-feedback/solution
+configfile: pyproject.toml
+plugins: asyncio-1.4.0, anyio-4.10.0, langsmith-0.4.27, typeguard-4.3.0, Faker-25.2.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 14 items
 
-Queue counts:
-auto_approve: 0
-human_review: 8
-spot_check: 1
+tests/test_us01_retry.py ..............                                  [100%]
 
-Completed policy pipeline run successfully.
+============================== 14 passed in 3.72s ==============================
